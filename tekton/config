@@ -1,0 +1,33 @@
+#!/bin/bash
+### Setting configuration defaults
+#
+# appname will be used as the prefix for all application resources
+#
+appname="template"
+#
+# appversion is added to appname to indicate version
+#
+appversion="1.0"
+#
+# apptype is the application type - useful to select the stage for build - such as nodejs/java/dotnet etc
+#
+apptype="nodejs"
+#
+# sandbox is the project name for your sandbox - specify an existing project
+#
+sandbox="sandbox01"
+#
+# build - keep to true 
+#
+build="true"
+#
+# the following deploy statements determine which level do you wanted to deploy
+#
+deploysandbox="true"
+deploydev="false"
+deploytest="false"
+deployqa="false"
+#
+# and whether to deploy to PROD
+#
+prod="false"
