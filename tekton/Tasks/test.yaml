@@ -5,9 +5,9 @@ metadata:
 spec:
   inputs:
     resources:
-      - name: git-source-web
+      - name: {APPNAME}-gitsrc
         type: git
-      - name: docker-image-web
+      - name: {APPNAME}-image
         type: image
     params:
       - name: testScript
@@ -15,7 +15,7 @@ spec:
   steps:
   - name: modify-app-deploy-yaml
     image: registry.access.redhat.com/ubi8/ubi:latest
-    workingDir: /workspace/git-source-web
+    workingDir: /workspace/{APPNAME}-gitsrc
     command: ["/bin/bash"]
     args:
       - -c
@@ -23,4 +23,4 @@ spec:
         APPNAME={APPNAME}
         PORT={PORT}
         DEVNS={DEVNS}
-        /workspace/git-source-web/test/$(inputs.params.testScript)
+        /workspace/{APPNAME}-gitsrc/test/$(inputs.params.testScript)

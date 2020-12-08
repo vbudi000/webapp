@@ -5,9 +5,9 @@ metadata:
 spec:
   inputs:
     resources:
-      - name: git-source-web
+      - name: {APPNAME}-gitsrc
         type: git
-      - name: docker-image-web
+      - name: {APPNAME}-image
         type: image
     params:
       - name: BUILDER_IMAGE
@@ -25,20 +25,20 @@ spec:
   steps:
   - name: node-install
     image: node:6-alpine
-    workingDir: /workspace/git-source-web/StoreWebApp
+    workingDir: /workspace/{APPNAME}-gitsrc/StoreWebApp
     command: ["npm"]
     args:
       - "install"
   - name: build-push
     image: $(inputs.params.BUILDER_IMAGE)
-    workingDir: /workspace/git-source-web
+    workingDir: /workspace/{APPNAME}-gitsrc
     command: ["/bin/bash"]
     args:
       - -c
       - |
         set -e
         SHORT_GIT_HASH="$(cat .git/FETCH_HEAD | awk '{print substr($1,0,7)}')"
-        NEW_IMAGE_ID="$(inputs.resources.docker-image-web.url):$SHORT_GIT_HASH"
+        NEW_IMAGE_ID="$(inputs.resources.{APPNAME}-image.url):$SHORT_GIT_HASH"
         echo "SHORT_GIT_HASH = $SHORT_GIT_HASH"
         echo "Building Image $NEW_IMAGE_ID"
         buildah bud --tls-verify="$(inputs.params.TLSVERIFY)" --storage-driver=vfs --layers -f "$(inputs.params.DOCKERFILE)" -t "$NEW_IMAGE_ID" "$(inputs.params.CONTEXT)"

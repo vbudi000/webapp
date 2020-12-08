@@ -19,7 +19,6 @@ spec:
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
-              port: 8000
+              port: {PORT}
             initialDelaySeconds: 20
             periodSeconds: 60
-

@@ -22,12 +22,13 @@ fi
 # get appname from DIRNAME
 # appname=$(git config --get remote.origin.url | cut -d\/ -f5)
 
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s/{APPNAME}/${appname}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s/{APPVERSION}/${appversion}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s/{GITURL}/$(git config --get remote.origin.url)/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s/{DEVNS}/${devns}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s/{DEPLOY-DEV}/${deploydev}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s/{DEPLOY-QA}/${deployqa}/g"
+find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{APPNAME}/${appname}/g"
+find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{APPVERSION}/${appversion}/g"
+find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{GITURL}/$(git config --get remote.origin.url)/g"
+find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{DEVNS}/${devns}/g"
+find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{DEPLOY-DEV}/${deploydev}/g"
+find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{DEPLOY-QA}/${deployqa}/g"
+find . -name *.bak | xargs rm -f
 
 ## Step 1: Create base project in the non-Prod hub
 
