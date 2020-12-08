@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: {APPNAME}-listener
+spec:
+  serviceAccountName: pipeline
+  triggers:
+  - binding:
+      name: {APPNAME}-pullrequest-binding
+    template:
+      name: {APPNAME}-triggertemplate
+  - binding:
+      name: {APPNAME}-push-binding
+    template:
+      name: {APPNAME}-triggertemplate

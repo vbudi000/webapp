@@ -17,10 +17,6 @@ apptype="nodejs"
 #
 devns="sandbox01"
 #
-# port number the application listen to
-#
-port="8000"
-#
 # build - keep to true
 #
 build="true"
@@ -29,3 +25,7 @@ build="true"
 #
 deploydev="true"
 deployqa="false"
+#
+# and whether to deploy to PROD
+#
+prod="false"

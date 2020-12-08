@@ -12,8 +12,6 @@ spec:
     params:
       - name: pathToYamlFile
         description: The path to the yaml file to deploy within the git source
-      - name: pathToDeployablesFile
-        description: The path to the deployable file to deploy within the git source
   steps:
   - name: modify-app-deploy-yaml
     image: registry.access.redhat.com/ubi8/ubi:latest
@@ -27,12 +25,13 @@ spec:
         NEW_IMAGE_ID="$(inputs.resources.docker-image-web.url):$SHORT_GIT_HASH"
         echo "SHORT_GIT_HASH = $SHORT_GIT_HASH"
         echo "Using Image $NEW_IMAGE_ID"
-        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/git-source-web/$(inputs.params.pathToYamlFile)/webapp.yaml
-        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/git-source-web/$(inputs.params.pathToDeployablesFile)/deployable.yaml
+        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/git-source-web/$(inputs.params.pathToYamlFile)/deployment.yaml
+        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/git-source-web/$(inputs.params.pathToYamlFile)/deployable.yaml
   - name: deploy-image
     image: ibmgaragetsa/cpeir-runtime:v0.001
-    command: ["oc"]
+    command: ["/bin/bash"]
     args:
-        - "apply"
-        - "-f"
-        - "/workspace/git-source-web/$(inputs.params.pathToYamlFile)"
+        - "-c"
+        - |
+          set -e
+          oc apply -f /workspace/git-source-web/$(inputs.params.pathToYamlFile)/deployable.yaml

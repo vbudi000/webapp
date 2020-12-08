@@ -33,6 +33,6 @@ spec:
         - name: deploy-qa
           default: "{DEPLOY-QA}"
         - name: prod
-          default: "{PROD}"        
+          default: "{PROD}"
       serviceAccountName: pipeline
       timeout: "1h0m0s"

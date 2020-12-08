@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: {APPNAME}-check
+spec:
+  inputs:
+    resources:
+      - name: git-source-web
+        type: git
+      - name: docker-image-web
+        type: image
+    params:
+      - name: pathToYamlFile
+        description: The path to the yaml file to deploy within the git source
+      - name: pathToDeployablesFile
+        description: The path to the deployable file to deploy within the git source
+  steps:
+  - name: sonar-scan
+    image: docker.io/sonarsource/sonar-scanner-cli:4.5@sha256:b8c95a37025f3c13162118cd55761ea0b2a13d1837f9deec51b7b6d82c52040a #tag: 4.5
+    workingDir: /workspace/git-source-web
+    command:
+      - sonar-scanner

@@ -10,10 +10,8 @@ spec:
       - name: docker-image-web
         type: image
     params:
-      - name: pathToYamlFile
-        description: The path to the yaml file to deploy within the git source
-      - name: pathToDeployablesFile
-        description: The path to the deployable file to deploy within the git source
+      - name: testScript
+        description: The path to the bash file for testing 
   steps:
   - name: modify-app-deploy-yaml
     image: registry.access.redhat.com/ubi8/ubi:latest
@@ -22,17 +20,7 @@ spec:
     args:
       - -c
       - |
-        set -e
-        SHORT_GIT_HASH="$(cat .git/FETCH_HEAD | awk '{print substr($1,0,7)}')"
-        NEW_IMAGE_ID="$(inputs.resources.docker-image-web.url):$SHORT_GIT_HASH"
-        echo "SHORT_GIT_HASH = $SHORT_GIT_HASH"
-        echo "Using Image $NEW_IMAGE_ID"
-        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/git-source-web/$(inputs.params.pathToYamlFile)/webapp.yaml
-        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/git-source-web/$(inputs.params.pathToDeployablesFile)/deployable.yaml
-  - name: deploy-image
-    image: ibmgaragetsa/cpeir-runtime:v0.001
-    command: ["oc"]
-    args:
-        - "apply"
-        - "-f"
-        - "/workspace/git-source-web/$(inputs.params.pathToYamlFile)"
+        APPNAME={APPNAME}
+        PORT={PORT}
+        DEVNS={DEVNS}
+        /workspace/git-source-web/test/$(inputs.params.testScript)

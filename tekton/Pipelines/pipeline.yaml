@@ -38,26 +38,23 @@ spec:
           resource: {APPNAME}-image
     taskRef:
       name: {APPNAME}-build
-  - name: test-task
-    params:
-      - name: pathToYamlFile
-        value:  "$(params.pathToYamlFile)"
-      - name: pathToDeployablesFile
-        value:  "$(params.pathToDeployablesFile)"
+  - name: check-task
+    resources:
+      inputs:
+        - name: {APPNAME}-gitsrc
+          resource: {APPNAME}-gitsrc
+        - name: {APPNAME}-image
+          resource: {APPNAME}-image
     results:
       - name: ok
         description: indicates whether the test passed
-    resources:
-      inputs:
-        - name: {APPNAME}-image
-          resource: {APPNAME}-image
     runAfter:
       - build-task
     taskRef:
       name: {APPNAME}-test
-  - name: deploy-sandbox
+  - name: deploy-dev
     when:
-      - input: $(params.deploy-sandbox)
+      - input: $(params.deploy-dev)
         operator: in
         values: ["true"]
       - input: $(tasks.test-task.results.ok)
@@ -71,15 +68,15 @@ spec:
         - name: {APPNAME}-image
           resource: {APPNAME}-image
     runAfter:
-      - test-task
+      - check-task
     taskRef:
       name: {APPNAME}-deploy-sandbox
-  - name: deploy-dev
+  - name: test
     when:
       - input: $(params.deploy-dev)
         operator: in
         values: ["true"]
-      - input: $(tasks.test-task.results.ok)
+      - input: $(tasks.deploy-dev.results.ok)
         operator: in
         values: ["yes"]
     results:

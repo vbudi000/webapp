@@ -28,12 +28,17 @@ find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s
 find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s/{DEVNS}/${devns}/g"
 find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s/{DEPLOY-DEV}/${deploydev}/g"
 find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s/{DEPLOY-QA}/${deployqa}/g"
+find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i "s/{PROD}/${prod}/g"
 
 ## Step 1: Create base project in the non-Prod hub
 
 exists=$(oc projects ${appname} 2>/dev/null | wc -l)
 if [ $exists -eq 0 ]; then
   oc new-project ${appname}
+fi
+
+if [ "$prod" == "true" ]; then
+  # Need to consider what to do for the PROD later
 fi
 
 ## Step 2: Create tekton resources
