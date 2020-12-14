@@ -7,8 +7,6 @@ spec:
     resources:
       - name: {APPNAME}-gitsrc
         type: git
-      - name: {APPNAME}-image
-        type: image
     params:
     - name: SONAR_HOST_URL
       description: Host URL where the sonarqube server is running
@@ -17,8 +15,17 @@ spec:
       description: Project's unique key
       default: ""
   steps:
-  - name: sonar-scan
-    image: docker.io/sonarsource/sonar-scanner-cli:4.5@sha256:b8c95a37025f3c13162118cd55761ea0b2a13d1837f9deec51b7b6d82c52040a #tag: 4.5
+  - name: return-true
+    image: registry.access.redhat.com/ubi8/ubi:latest
     workingDir: /workspace/{APPNAME}-gitsrc
-    command:
-      - sonar-scanner
+    command: ["/bin/bash"]
+    args:
+      - -c
+      - |
+        set -e
+        echo "No scan for now"
+#  - name: sonar-scan
+#    image: docker.io/sonarsource/sonar-scanner-cli:4.5@sha256:b8c95a37025f3c13162118cd55761ea0b2a13d1837f9deec51b7b6d82c52040a #tag: 4.5
+#    workingDir: /workspace/{APPNAME}-gitsrc
+#    command:
+#      - sonar-scanner

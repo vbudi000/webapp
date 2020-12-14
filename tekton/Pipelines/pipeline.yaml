@@ -19,6 +19,18 @@ spec:
       description: deploy to qa
       default: "{DEPLOY-QA}"
   tasks:
+  - name: scan-task
+    resources:
+      inputs:
+        - name: {APPNAME}-gitsrc
+          resource: {APPNAME}-gitsrc
+    params:
+      - name: SONAR_HOST_URL
+        value: ""
+      - name: SONAR_PROJECT_KEY
+        value: ""
+    taskRef:
+      name: {APPNAME}-check
   - name: build-task
     resources:
       inputs:
@@ -26,84 +38,36 @@ spec:
           resource: {APPNAME}-gitsrc
         - name: {APPNAME}-image
           resource: {APPNAME}-image
+    runAfter:
+      - scan-task
     taskRef:
       name: {APPNAME}-build
-  - name: check-task
+  - name: deploy-dev
+    #when: the when operator will be available in v0.16
+    #  - input: $(params.deploy-dev)
+    #    operator: in
+    #    values: ["true"]
+    #  - input: $(tasks.test-task.results.ok)
+    #    operator: in
+    #    values: ["yes"]
     resources:
       inputs:
         - name: {APPNAME}-gitsrc
           resource: {APPNAME}-gitsrc
         - name: {APPNAME}-image
           resource: {APPNAME}-image
-    results:
-      - name: ok
-        description: indicates whether the test passed
     runAfter:
       - build-task
     taskRef:
-      name: {APPNAME}-test
-  - name: check-deploy-dev
-    conditions:
-      - conditionRef: "file-exists"
-        resources:
-          - name: workspace
-            resource: source-repo
-            from: [first-create-file]
-    taskRef:
-      name: echo-hello
-  - name: deploy-dev
-    when:
-      - input: $(params.deploy-dev)
-        operator: in
-        values: ["true"]
-      - input: $(tasks.test-task.results.ok)
-        operator: in
-        values: ["yes"]
-    results:
-      - name: ok
-        description: indicates whether the test passed
-    resources:
-      inputs:
-        - name: {APPNAME}-gitsrc
-          resource: {APPNAME}-gitsrc
-        - name: {APPNAME}-image
-          resource: {APPNAME}-image
-    runAfter:
-      - check-task
-    taskRef:
-      name: {APPNAME}-deploy-sandbox
-  - name: test
-    when:
-      - input: $(params.deploy-dev)
-        operator: in
-        values: ["true"]
-      - input: $(tasks.deploy-dev.results.ok)
-        operator: in
-        values: ["yes"]
-    results:
-      - name: ok
-        description: indicates whether the test passed
-    resources:
-      inputs:
-        - name: {APPNAME}-gitsrc
-          resource: {APPNAME}-gitsrc
-        - name: {APPNAME}-image
-          resource: {APPNAME}-image
-    runAfter:
-      - deploy-sandbox
-    taskRef:
       name: {APPNAME}-deploy-dev
-  - name: deploy-test
-    when:
-      - input: $(params.deploy-test)
-        operator: in
-        values: ["true"]
-      - input: $(tasks.test-task.results.ok)
-        operator: in
-        values: ["yes"]
-    results:
-      - name: ok
-        description: indicates whether the test passed
+  - name: test
+    #when:
+    #  - input: $(params.deploy-dev)
+    #    operator: in
+    #    values: ["true"]
+    #  - input: $(tasks.deploy-dev.results.ok)
+    #    operator: in
+    #    values: ["yes"]
     resources:
       inputs:
         - name: {APPNAME}-gitsrc
@@ -113,42 +77,22 @@ spec:
     runAfter:
       - deploy-dev
     taskRef:
-      name: {APPNAME}-deploy-test
+      name: {APPNAME}-test
   - name: deploy-qa
-    when:
-      - input: $(params.deploy-qa)
-        operator: in
-        values: ["true"]
-      - input: $(tasks.test-task.results.ok)
-        operator: in
-        values: ["yes"]
-    results:
-      - name: ok
-        description: indicates whether the test passed
+    #when:
+    #  - input: $(params.deploy-qa)
+    #    operator: in
+    #    values: ["true"]
+    #  - input: $(tasks.test-task.results.ok)
+    #    operator: in
+    #    values: ["yes"]
     resources:
       inputs:
+        - name: {APPNAME}-gitsrc
+          resource: {APPNAME}-gitsrc
         - name: {APPNAME}-image
           resource: {APPNAME}-image
     runAfter:
-      - deploy-test
+      - test
     taskRef:
       name: {APPNAME}-deploy-qa
-  - name: prod
-    when:
-      - input: $(params.prod)
-        operator: in
-        values: ["true"]
-      - input: $(tasks.test-task.results.ok)
-        operator: in
-        values: ["yes"]
-    results:
-      - name: ok
-        description: indicates whether the test passed
-    resources:
-      inputs:
-        - name: {APPNAME}-image
-          resource: {APPNAME}-image
-    runAfter:
-      - deploy-qa
-    taskRef:
-      name: {APPNAME}-prod
