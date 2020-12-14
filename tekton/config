@@ -13,9 +13,12 @@ appversion="1.0"
 #
 apptype="nodejs"
 #
-# sandbox is the project name for your sandbox - specify an existing project
+# namespaces
 #
-devns="sandbox01"
+devopsns="tekton"
+devns="app-dev"
+qans="app-qa"
+prodns="app-prod"
 #
 # port number the application listen to
 #

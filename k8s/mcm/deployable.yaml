@@ -3,7 +3,10 @@ kind: Deployable
 metadata:
   annotations:
     app.ibm.com/is-local-deployable: "false"
-  name: {APPNAME}-deploy
+  name: {APPNAME}-deployment
+  namespace: {DEVNS}
+  labels:
+    appgroup: {APPNAME}
 spec:
   template:
     apiVersion: apps/v1
@@ -37,3 +40,51 @@ spec:
                 value: "dbuser"
               - name: "spring_datasource_password"
                 value: "Pass4dbUs3R"
+---
+apiVersion: app.ibm.com/v1alpha1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: {APPNAME}-service
+  namespace: {DEVNS}
+  labels:
+    appgroup: {APPNAME}
+spec:
+  template:
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: {APPNAME}-service
+      labels:
+        app: {APPNAME}
+    spec:
+      type: NodePort
+      selector:
+        app: {APPNAME}
+      ports:
+       - protocol: TCP
+         port: {PORT}
+---
+apiVersion: app.ibm.com/v1alpha1
+kind: Deployable
+metadata:
+  annotations:
+    app.ibm.com/is-local-deployable: "false"
+  name: {APPNAME}-route
+  namespace: {DEVNS}
+  labels:
+    appgroup: {APPNAME}
+spec:
+  template:
+    apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      name: {APPNAME}
+    spec:
+      port:
+        targetPort: {PORT}
+      to:
+        kind: Service
+        name: {APPNAME}-service
+        weight: 100

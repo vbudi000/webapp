@@ -1,0 +1,17 @@
+apiVersion: apps.open-cluster-management.io/v1
+kind: Subscription
+metadata:
+  name: {APPNAME}-subscription
+  namespace: {DEVNS}
+  labels:
+    appgroup: {APPNAME}
+spec:
+  channel: {APPNAME}-channel
+  packageFilter:
+    labelSelector:
+      matchLabels:
+        appgroup: {APPNAME}
+  placement:
+    placementRef:
+      kind: PlacementRule
+      name: {APPNAME}-placementrule

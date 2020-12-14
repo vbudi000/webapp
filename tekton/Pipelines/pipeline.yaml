@@ -12,28 +12,18 @@ spec:
     - name: pathToYamlFile
       description: The path to the yaml file to deploy within the git source
       default: "k8s"
-    - name: deploy-sandbox
-      description: deploy to sandbox
-      default: "{DEPLOY-SANDBOX}"
     - name: deploy-dev
       description: deploy to dev
       default: "{DEPLOY-DEV}"
-    - name: deploy-test
-      description: deploy to test
-      default: "{DEPLOY-TEST}"
     - name: deploy-qa
       description: deploy to qa
       default: "{DEPLOY-QA}"
-    - name: prod
-      description: deploy to prod
-      default: "{PROD}"
   tasks:
   - name: build-task
     resources:
       inputs:
         - name: {APPNAME}-gitsrc
           resource: {APPNAME}-gitsrc
-      outputs:
         - name: {APPNAME}-image
           resource: {APPNAME}-image
     taskRef:
@@ -52,6 +42,15 @@ spec:
       - build-task
     taskRef:
       name: {APPNAME}-test
+  - name: check-deploy-dev
+    conditions:
+      - conditionRef: "file-exists"
+        resources:
+          - name: workspace
+            resource: source-repo
+            from: [first-create-file]
+    taskRef:
+      name: echo-hello
   - name: deploy-dev
     when:
       - input: $(params.deploy-dev)
@@ -65,6 +64,8 @@ spec:
         description: indicates whether the test passed
     resources:
       inputs:
+        - name: {APPNAME}-gitsrc
+          resource: {APPNAME}-gitsrc
         - name: {APPNAME}-image
           resource: {APPNAME}-image
     runAfter:
@@ -84,6 +85,8 @@ spec:
         description: indicates whether the test passed
     resources:
       inputs:
+        - name: {APPNAME}-gitsrc
+          resource: {APPNAME}-gitsrc
         - name: {APPNAME}-image
           resource: {APPNAME}-image
     runAfter:
@@ -103,6 +106,8 @@ spec:
         description: indicates whether the test passed
     resources:
       inputs:
+        - name: {APPNAME}-gitsrc
+          resource: {APPNAME}-gitsrc
         - name: {APPNAME}-image
           resource: {APPNAME}-image
     runAfter:

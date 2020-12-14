@@ -26,6 +26,9 @@ find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .b
 find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{APPVERSION}/${appversion}/g"
 find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{GITURL}/$(git config --get remote.origin.url)/g"
 find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{DEVNS}/${devns}/g"
+find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{QANS}/${qans}/g"
+find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{PRODNS}/${prodns}/g"
+find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{PORT}/${port}/g"
 find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{DEPLOY-DEV}/${deploydev}/g"
 find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{DEPLOY-QA}/${deployqa}/g"
 find . -name *.bak | xargs rm -f

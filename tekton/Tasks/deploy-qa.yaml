@@ -13,7 +13,7 @@ spec:
       - name: pathToYamlFile
         description: The path to the yaml file to deploy within the git source
   steps:
-  - name: modify-app-deploy-yaml
+  - name: modify-deploy-yaml
     image: registry.access.redhat.com/ubi8/ubi:latest
     workingDir: /workspace/{APPNAME}-gitsrc
     command: ["/bin/bash"]
@@ -25,13 +25,17 @@ spec:
         NEW_IMAGE_ID="$(inputs.resources.{APPNAME}-image.url):$SHORT_GIT_HASH"
         echo "SHORT_GIT_HASH = $SHORT_GIT_HASH"
         echo "Using Image $NEW_IMAGE_ID"
-        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/deployment.yaml
+        # sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/deployment.yaml
         sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/deployable.yaml
-  - name: deploy-image
+  - name: deploy-mcm
     image: ibmgaragetsa/cpeir-runtime:v0.001
     command: ["/bin/bash"]
     args:
         - "-c"
         - |
           set -e
-          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/deployable.yaml
+          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/mcm/channel.yaml
+          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/mcm/application.yaml
+          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/mcm/placementrule.yaml
+          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/mcm/subscription.yaml
+          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/mcm/deployable.yaml
