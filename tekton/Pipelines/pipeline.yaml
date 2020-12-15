@@ -14,10 +14,10 @@ spec:
       default: "k8s"
     - name: deploy-dev
       description: deploy to dev
-      default: "{DEPLOY-DEV}"
+      default: "true"
     - name: deploy-qa
       description: deploy to qa
-      default: "{DEPLOY-QA}"
+      default: "false"
   tasks:
   - name: scan-task
     resources:
@@ -56,6 +56,11 @@ spec:
           resource: {APPNAME}-gitsrc
         - name: {APPNAME}-image
           resource: {APPNAME}-image
+    params:
+      - name: pathToYamlFile
+        value: "k8s"
+      - name: devns
+        value: "{DEVNS}"
     runAfter:
       - build-task
     taskRef:
@@ -74,6 +79,9 @@ spec:
           resource: {APPNAME}-gitsrc
         - name: {APPNAME}-image
           resource: {APPNAME}-image
+    params:
+      - name: testScript
+        value: "dev-test.sh"
     runAfter:
       - deploy-dev
     taskRef:
@@ -92,6 +100,15 @@ spec:
           resource: {APPNAME}-gitsrc
         - name: {APPNAME}-image
           resource: {APPNAME}-image
+    params:
+      - name: pathToYamlFile
+        value: "k8s"
+      - name: devns
+        value: "{DEVNS}"
+      - name: devopsns
+        value: "{DEVOPSNS}"
+      - name: qans
+        value: "{QANS}"
     runAfter:
       - test
     taskRef:
