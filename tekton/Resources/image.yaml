@@ -1,10 +1,10 @@
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
 metadata:
-  name: {APPNAME}-image
+  name: webapp-image
   namespace: {DEVOPSNS}
 spec:
   params:
   - name: url
-    value: {IMAGE}/{APPNAME}-{APPVERSION}
+    value: docker.io/vbudi/webapp-1.0
   type: image

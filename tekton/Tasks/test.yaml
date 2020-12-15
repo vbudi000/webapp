@@ -1,14 +1,14 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: {APPNAME}-test
+  name: webapp-test
   namespace: {DEVOPSNS}
 spec:
   inputs:
     resources:
-      - name: {APPNAME}-gitsrc
+      - name: webapp-gitsrc
         type: git
-      - name: {APPNAME}-image
+      - name: webapp-image
         type: image
     params:
       - name: testScript
@@ -16,12 +16,12 @@ spec:
   steps:
   - name: modify-app-deploy-yaml
     image: registry.access.redhat.com/ubi8/ubi:latest
-    workingDir: /workspace/{APPNAME}-gitsrc
+    workingDir: /workspace/webapp-gitsrc
     command: ["/bin/bash"]
     args:
       - -c
       - |
-        export APPNAME={APPNAME}
-        export PORT={PORT}
-        export DEVNS={DEVNS}
-        bash /workspace/{APPNAME}-gitsrc/test/$(inputs.params.testScript)
+        export APPNAME=webapp
+        export PORT=8000
+        export DEVNS=lightblue-dev
+        bash /workspace/webapp-gitsrc/test/$(inputs.params.testScript)

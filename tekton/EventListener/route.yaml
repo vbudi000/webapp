@@ -1,11 +1,11 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: el-{APPNAME}-listener
+  name: el-webapp-listener
 spec:
   port:
     targetPort: http-listener
   to:
     kind: Service
-    name: el-{APPNAME}-listener
+    name: el-webapp-listener
     weight: 100

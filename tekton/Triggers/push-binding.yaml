@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
-  name: {APPNAME}-push-binding
+  name: webapp-push-binding
 spec:
   params:
   - name: gitrevision

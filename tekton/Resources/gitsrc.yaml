@@ -1,12 +1,12 @@
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
 metadata:
-  name: {APPNAME}-gitsrc
+  name: webapp-gitsrc
   namespace: {DEVOPSNS}
 spec:
   params:
   - name: revision
     value: master
   - name: url
-    value: {GITURL}
+    value: https://github.com/vbudi000/webapp
   type: git

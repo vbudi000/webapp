@@ -1,12 +1,12 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
-  name: {APPNAME}-pipeline
+  name: webapp-pipeline
 spec:
   resources:
-    - name: {APPNAME}-gitsrc
+    - name: webapp-gitsrc
       type: git
-    - name: {APPNAME}-image
+    - name: webapp-image
       type: image
   params:
     - name: pathToYamlFile
@@ -17,13 +17,13 @@ spec:
       default: "{DEPLOY-SANDBOX}"
     - name: deploy-dev
       description: deploy to dev
-      default: "{DEPLOY-DEV}"
+      default: "true"
     - name: deploy-test
       description: deploy to test
       default: "{DEPLOY-TEST}"
     - name: deploy-qa
       description: deploy to qa
-      default: "{DEPLOY-QA}"
+      default: "false"
     - name: prod
       description: deploy to prod
       default: "{PROD}"
@@ -31,17 +31,17 @@ spec:
   - name: test-task
     resources:
       inputs:
-        - name: {APPNAME}-gitsrc
-          resource: {APPNAME}-gitsrc
-        - name: {APPNAME}-image
-          resource: {APPNAME}-image
+        - name: webapp-gitsrc
+          resource: webapp-gitsrc
+        - name: webapp-image
+          resource: webapp-image
     results:
       - name: ok
         description: indicates whether the test passed
     runAfter:
       - build-task
     taskRef:
-      name: {APPNAME}-test
+      name: webapp-test
   - name: prod
     when:
       - input: $(params.prod)
@@ -55,9 +55,9 @@ spec:
         description: indicates whether the test passed
     resources:
       inputs:
-        - name: {APPNAME}-image
-          resource: {APPNAME}-image
+        - name: webapp-image
+          resource: webapp-image
     runAfter:
       - deploy-qa
     taskRef:
-      name: {APPNAME}-prod
+      name: webapp-prod

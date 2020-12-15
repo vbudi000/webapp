@@ -1,10 +1,10 @@
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: {APPNAME}-placementrule
+  name: webapp-placementrule
   namespace: {DEVOPSNS}
   labels:
-    appgroup: {APPNAME}
+    appgroup: webapp
 spec:
   clusterLabels:
     matchLabels:

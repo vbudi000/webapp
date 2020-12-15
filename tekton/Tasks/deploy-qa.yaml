@@ -1,14 +1,14 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: {APPNAME}-deploy-qa
+  name: webapp-deploy-qa
   namespace: {DEVOPSNS}
 spec:
   inputs:
     resources:
-      - name: {APPNAME}-gitsrc
+      - name: webapp-gitsrc
         type: git
-      - name: {APPNAME}-image
+      - name: webapp-image
         type: image
     params:
       - name: pathToYamlFile
@@ -20,18 +20,18 @@ spec:
   steps:
   - name: modify-deploy-yaml
     image: registry.access.redhat.com/ubi8/ubi:latest
-    workingDir: /workspace/{APPNAME}-gitsrc
+    workingDir: /workspace/webapp-gitsrc
     command: ["/bin/bash"]
     args:
       - -c
       - |
         set -e
         SHORT_GIT_HASH="$(cat .git/FETCH_HEAD | awk '{print substr($1,0,7)}')"
-        NEW_IMAGE_ID="$(inputs.resources.{APPNAME}-image.url):$SHORT_GIT_HASH"
+        NEW_IMAGE_ID="$(inputs.resources.webapp-image.url):$SHORT_GIT_HASH"
         echo "SHORT_GIT_HASH = $SHORT_GIT_HASH"
         echo "Using Image $NEW_IMAGE_ID"
-        # sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/deployment.yaml
-        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/deployable.yaml
+        # sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/webapp-gitsrc/$(inputs.params.pathToYamlFile)/deployment.yaml
+        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/webapp-gitsrc/$(inputs.params.pathToYamlFile)/deployable.yaml
   - name: deploy-mcm
     image: ibmgaragetsa/cpeir-runtime:v0.001
     command: ["/bin/bash"]
@@ -39,8 +39,8 @@ spec:
         - "-c"
         - |
           set -e
-          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/mcm/channel.yaml
-          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/mcm/application.yaml
-          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/mcm/placementrule.yaml
-          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/mcm/subscription.yaml
-          oc apply -f /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/mcm/deployable.yaml
+          oc apply -f /workspace/webapp-gitsrc/$(inputs.params.pathToYamlFile)/mcm/channel.yaml
+          oc apply -f /workspace/webapp-gitsrc/$(inputs.params.pathToYamlFile)/mcm/application.yaml
+          oc apply -f /workspace/webapp-gitsrc/$(inputs.params.pathToYamlFile)/mcm/placementrule.yaml
+          oc apply -f /workspace/webapp-gitsrc/$(inputs.params.pathToYamlFile)/mcm/subscription.yaml
+          oc apply -f /workspace/webapp-gitsrc/$(inputs.params.pathToYamlFile)/mcm/deployable.yaml

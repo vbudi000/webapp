@@ -1,13 +1,13 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: {APPNAME}-test
+  name: webapp-test
 spec:
   inputs:
     resources:
-      - name: {APPNAME}-gitsrc
+      - name: webapp-gitsrc
         type: git
-      - name: {APPNAME}-image
+      - name: webapp-image
         type: image
     params:
       - name: pathToYamlFile
@@ -17,22 +17,22 @@ spec:
   steps:
   - name: modify-app-deploy-yaml
     image: registry.access.redhat.com/ubi8/ubi:latest
-    workingDir: /workspace/{APPNAME}-gitsrc
+    workingDir: /workspace/webapp-gitsrc
     command: ["/bin/bash"]
     args:
       - -c
       - |
         set -e
         SHORT_GIT_HASH="$(cat .git/FETCH_HEAD | awk '{print substr($1,0,7)}')"
-        NEW_IMAGE_ID="$(inputs.resources.{APPNAME}-image.url):$SHORT_GIT_HASH"
+        NEW_IMAGE_ID="$(inputs.resources.webapp-image.url):$SHORT_GIT_HASH"
         echo "SHORT_GIT_HASH = $SHORT_GIT_HASH"
         echo "Using Image $NEW_IMAGE_ID"
-        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)/webapp.yaml
-        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/{APPNAME}-gitsrc/$(inputs.params.pathToDeployablesFile)/deployable.yaml
+        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/webapp-gitsrc/$(inputs.params.pathToYamlFile)/webapp.yaml
+        sed -i -e 's|__IMAGE__|'"$NEW_IMAGE_ID"'|g' /workspace/webapp-gitsrc/$(inputs.params.pathToDeployablesFile)/deployable.yaml
   - name: deploy-image
     image: ibmgaragetsa/cpeir-runtime:v0.001
     command: ["oc"]
     args:
         - "apply"
         - "-f"
-        - "/workspace/{APPNAME}-gitsrc/$(inputs.params.pathToYamlFile)"
+        - "/workspace/webapp-gitsrc/$(inputs.params.pathToYamlFile)"

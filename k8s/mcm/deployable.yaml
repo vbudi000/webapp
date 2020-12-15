@@ -3,29 +3,29 @@ kind: Deployable
 metadata:
   annotations:
     app.ibm.com/is-local-deployable: "false"
-  name: {APPNAME}-deployment
+  name: webapp-deployment
   namespace: {DEVOPSNS}
   labels:
-    appgroup: {APPNAME}
+    appgroup: webapp
 spec:
   template:
     apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: {APPNAME}-deployment
+      name: webapp-deployment
     spec:
       replicas: 1
       selector:
         matchLabels:
-          app: {APPNAME}
+          app: webapp
       template:
         metadata:
-          name: pod-{APPNAME}
+          name: pod-webapp
           labels:
-            app: {APPNAME}
+            app: webapp
         spec:
           containers:
-            - name: {APPNAME}
+            - name: webapp
               image: __IMAGE__
               imagePullPolicy: Always
               livenessProbe:
@@ -46,45 +46,45 @@ kind: Deployable
 metadata:
   annotations:
     app.ibm.com/is-local-deployable: "false"
-  name: {APPNAME}-service
+  name: webapp-service
   namespace: {DEVOPSNS}
   labels:
-    appgroup: {APPNAME}
+    appgroup: webapp
 spec:
   template:
     apiVersion: v1
     kind: Service
     metadata:
-      name: {APPNAME}-service
+      name: webapp-service
       labels:
-        app: {APPNAME}
+        app: webapp
     spec:
       type: NodePort
       selector:
-        app: {APPNAME}
+        app: webapp
       ports:
        - protocol: TCP
-         port: {PORT}
+         port: 8000
 ---
 apiVersion: app.ibm.com/v1alpha1
 kind: Deployable
 metadata:
   annotations:
     app.ibm.com/is-local-deployable: "false"
-  name: {APPNAME}-route
+  name: webapp-route
   namespace: {DEVOPSNS}
   labels:
-    appgroup: {APPNAME}
+    appgroup: webapp
 spec:
   template:
     apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
-      name: {APPNAME}
+      name: webapp
     spec:
       port:
-        targetPort: {PORT}
+        targetPort: 8000
       to:
         kind: Service
-        name: {APPNAME}-service
+        name: webapp-service
         weight: 100

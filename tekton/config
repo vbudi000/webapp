@@ -3,7 +3,7 @@
 #
 # appname will be used as the prefix for all application resources
 #
-appname="template"
+appname="webapp"
 #
 # appversion is added to appname to indicate version
 #
@@ -15,10 +15,10 @@ apptype="nodejs"
 #
 # namespaces
 #
-devopsns="tekton"
-devns="app-dev"
-qans="app-qa"
-prodns="app-prod"
+devopsns="devops"
+devns="lightblue-dev"
+qans="lightblue-qa"
+prodns="lightblue-prod"
 #
 # port number the application listen to
 #

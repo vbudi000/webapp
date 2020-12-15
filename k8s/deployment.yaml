@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {APPNAME}-deployment
+  name: webapp-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {APPNAME}
+      app: webapp
   template:
     metadata:
-      name: pod-{APPNAME}
+      name: pod-webapp
       labels:
-        app: {APPNAME}
+        app: webapp
     spec:
       containers:
-        - name: {APPNAME}
+        - name: webapp
           image: __IMAGE__
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
-              port: {PORT}
+              port: 8000
             initialDelaySeconds: 20
             periodSeconds: 60

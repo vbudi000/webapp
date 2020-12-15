@@ -3,35 +3,35 @@ kind: TriggerTemplate
 # This requires the simple pipeline tasks from the pipeline hotel to be installed first
 # and the simple pipeline, and the conditional resource
 metadata:
-  name: {APPNAME}-triggertemplate
+  name: webapp-triggertemplate
 spec:
   resourcetemplates:
   - apiVersion: tekton.dev/v1alpha1
     kind: PipelineRun
     metadata:
-      generateName: {APPNAME}-pipelinerun-
-      namespace: {APPNAME}
+      generateName: webapp-pipelinerun-
+      namespace: webapp
     spec:
       pipelineRef:
-        name: {APPNAME}-pipeline
+        name: webapp-pipeline
       resources:
-        - name: {APPNAME}-gitsrc
+        - name: webapp-gitsrc
           resourceRef:
-            name: {APPNAME}-gitsrc
-        - name: {APPNAME}-image
+            name: webapp-gitsrc
+        - name: webapp-image
           resourceRef:
-            name: {APPNAME}-image
+            name: webapp-image
       params:
         - name: pathToYamlFile
           value: "k8s"
         - name: deploy-sandbox
           default: "{DEPLOY-SANDBOX}"
         - name: deploy-dev
-          default: "{DEPLOY-DEV}"
+          default: "true"
         - name: deploy-test
           default: "{DEPLOY-TEST}"
         - name: deploy-qa
-          default: "{DEPLOY-QA}"
+          default: "false"
         - name: prod
           default: "{PROD}"
       serviceAccountName: pipeline

@@ -1,44 +1,59 @@
 apiVersion: apps.open-cluster-management.io/v1
 kind: Subscription
 metadata:
-  name: {APPNAME}-deployment-subscription
+  name: webapp-deployment-subscription
   namespace: {DEVOPSNS}
   labels:
-    appgroup: {APPNAME}
+    appgroup: webapp
 spec:
-  channel: {APPNAME}-channel
-  name: {APPNAME}-deployment
+  channel: webapp-channel
+  name: webapp-deployment
   placement:
     placementRef:
       kind: PlacementRule
-      name: {APPNAME}-placementrule
+      name: webapp-placementrule
+  overrides:
+   - clusterName: "/"
+     clusterOverrides:
+      - path: "metadata.namespace"
+        value: lightblue-qa
 ---
 apiVersion: apps.open-cluster-management.io/v1
 kind: Subscription
 metadata:
-  name: {APPNAME}-service-subscription
+  name: webapp-service-subscription
   namespace: {DEVOPSNS}
   labels:
-    appgroup: {APPNAME}
+    appgroup: webapp
 spec:
-  channel: {APPNAME}-channel
-  name: {APPNAME}-service
+  channel: webapp-channel
+  name: webapp-service
   placement:
     placementRef:
       kind: PlacementRule
-      name: {APPNAME}-placementrule
+      name: webapp-placementrule
+  overrides:
+   - clusterName: "/"
+     clusterOverrides:
+      - path: "metadata.namespace"
+        value: lightblue-qa
 ---
 apiVersion: apps.open-cluster-management.io/v1
 kind: Subscription
 metadata:
-  name: {APPNAME}-route-subscription
+  name: webapp-route-subscription
   namespace: {DEVOPSNS}
   labels:
-    appgroup: {APPNAME}
+    appgroup: webapp
 spec:
-  channel: {APPNAME}-channel
-  name: {APPNAME}-route
+  channel: webapp-channel
+  name: webapp-route
   placement:
     placementRef:
       kind: PlacementRule
-      name: {APPNAME}-placementrule
+      name: webapp-placementrule
+  overrides:
+   - clusterName: "/"
+     clusterOverrides:
+      - path: "metadata.namespace"
+        value: lightblue-qa
