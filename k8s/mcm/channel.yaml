@@ -6,5 +6,5 @@ metadata:
 spec:
   pathname: {DEVOPSNS}
   sourceNamespaces:
-    - {DEVNS}
+    - {DEVOPSNS}
   type: Namespace

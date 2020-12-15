@@ -1,16 +1,43 @@
 apiVersion: apps.open-cluster-management.io/v1
 kind: Subscription
 metadata:
-  name: {APPNAME}-subscription
-  namespace: {DEVNS}
+  name: {APPNAME}-deployment-subscription
+  namespace: {DEVOPSNS}
   labels:
     appgroup: {APPNAME}
 spec:
   channel: {APPNAME}-channel
-  packageFilter:
-    labelSelector:
-      matchLabels:
-        appgroup: {APPNAME}
+  name: {APPNAME}-deployment
+  placement:
+    placementRef:
+      kind: PlacementRule
+      name: {APPNAME}-placementrule
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: Subscription
+metadata:
+  name: {APPNAME}-service-subscription
+  namespace: {DEVOPSNS}
+  labels:
+    appgroup: {APPNAME}
+spec:
+  channel: {APPNAME}-channel
+  name: {APPNAME}-service
+  placement:
+    placementRef:
+      kind: PlacementRule
+      name: {APPNAME}-placementrule
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: Subscription
+metadata:
+  name: {APPNAME}-route-subscription
+  namespace: {DEVOPSNS}
+  labels:
+    appgroup: {APPNAME}
+spec:
+  channel: {APPNAME}-channel
+  name: {APPNAME}-route
   placement:
     placementRef:
       kind: PlacementRule

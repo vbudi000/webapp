@@ -4,7 +4,7 @@ metadata:
   annotations:
     app.ibm.com/is-local-deployable: "false"
   name: {APPNAME}-deployment
-  namespace: {DEVNS}
+  namespace: {DEVOPSNS}
   labels:
     appgroup: {APPNAME}
 spec:
@@ -47,7 +47,7 @@ metadata:
   annotations:
     app.ibm.com/is-local-deployable: "false"
   name: {APPNAME}-service
-  namespace: {DEVNS}
+  namespace: {DEVOPSNS}
   labels:
     appgroup: {APPNAME}
 spec:
@@ -72,7 +72,7 @@ metadata:
   annotations:
     app.ibm.com/is-local-deployable: "false"
   name: {APPNAME}-route
-  namespace: {DEVNS}
+  namespace: {DEVOPSNS}
   labels:
     appgroup: {APPNAME}
 spec:

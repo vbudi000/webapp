@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
   name: {APPNAME}-deploy-qa
+  namespace: {DEVOPSNS}
 spec:
   inputs:
     resources:
@@ -12,6 +13,10 @@ spec:
     params:
       - name: pathToYamlFile
         description: The path to the yaml file to deploy within the git source
+      - name: devns
+        description: developer source namespace
+      - name: qans
+        description: namespace for the qa space on managed env
   steps:
   - name: modify-deploy-yaml
     image: registry.access.redhat.com/ubi8/ubi:latest

@@ -21,25 +21,32 @@ fi
 
 # get appname from DIRNAME
 # appname=$(git config --get remote.origin.url | cut -d\/ -f5)
+giturl=$(git config --get remote.origin.url)
 
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{APPNAME}/${appname}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{APPVERSION}/${appversion}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{GITURL}/$(git config --get remote.origin.url)/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{DEVNS}/${devns}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{QANS}/${qans}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{PRODNS}/${prodns}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{PORT}/${port}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{DEPLOY-DEV}/${deploydev}/g"
-find . \( -type d -name .git -prune \) -o -type f -name *.yaml | xargs sed -i .bak "s/{DEPLOY-QA}/${deployqa}/g"
+find . -type f -name *.yaml | xargs sed -i .bak "s/{APPNAME}/${appname}/g"
+find . -type f -name *.yaml | xargs sed -i .bak "s/{APPVERSION}/${appversion}/g"
+find . -type f -name *.yaml | xargs sed -i .bak "s/{GITURL}/${giturl}/g"
+find . -type f -name *.yaml | xargs sed -i .bak "s/{DEVNS}/${devns}/g"
+find . -type f -name *.yaml | xargs sed -i .bak "s/{QANS}/${qans}/g"
+find . -type f -name *.yaml | xargs sed -i .bak "s/{PRODNS}/${prodns}/g"
+find . -type f -name *.yaml | xargs sed -i .bak "s/{PORT}/${port}/g"
+find . -type f -name *.yaml | xargs sed -i .bak "s/{DEPLOY-DEV}/${deploydev}/g"
+find . -type f -name *.yaml | xargs sed -i .bak "s/{DEPLOY-QA}/${deployqa}/g"
 find . -name *.bak | xargs rm -f
 
 ## Step 1: Create base project in the non-Prod hub
 
-exists=$(oc projects ${appname} 2>/dev/null | wc -l)
+exists=$(oc projects ${devns} 2>/dev/null | wc -l)
 if [ $exists -eq 0 ]; then
-  oc new-project ${appname}
+  oc new-project ${devns}
 fi
 
+exists=$(oc projects ${devopsns} 2>/dev/null | wc -l)
+if [ $exists -eq 0 ]; then
+  oc new-project ${devopsns}
+fi
+
+exit
 ## Step 2: Create tekton resources
 
 for file in $(ls ./Resources); do

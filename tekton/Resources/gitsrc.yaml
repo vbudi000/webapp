@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
 metadata:
   name: {APPNAME}-gitsrc
+  namespace: {DEVOPSNS}
 spec:
   params:
   - name: revision
