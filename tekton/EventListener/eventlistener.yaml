@@ -6,17 +6,7 @@ spec:
   serviceAccountName: pipeline
   triggers:
   - name: webapp-listener
-    interceptors: 
-      - github:
-          secretRef:
-            secretName: gogs-secret
-            secretKey: secretToken
-          eventTypes:
-            - pull_request
-            - push
     bindings:
-     - name: webapp-pullrequest-binding
-       ref: webapp-pullrequest-binding
      - name: webapp-push-binding
        ref: webapp-push-binding
     template:

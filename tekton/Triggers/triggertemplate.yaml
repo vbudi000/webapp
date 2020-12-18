@@ -10,7 +10,7 @@ spec:
     kind: PipelineRun
     metadata:
       generateName: webapp-pipelinerun-
-      namespace: webapp
+      namespace: devops
     spec:
       pipelineRef:
         name: webapp-pipeline
@@ -25,8 +25,8 @@ spec:
         - name: pathToYamlFile
           value: "k8s"
         - name: deploy-dev
-          default: "true"
+          value: "true"
         - name: deploy-qa
-          default: "false"
+          value: "false"
       serviceAccountName: pipeline
       timeout: "1h0m0s"

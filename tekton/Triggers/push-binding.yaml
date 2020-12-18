@@ -5,12 +5,10 @@ metadata:
 spec:
   params:
   - name: gitrevision
-    value: $(body.head_commit.id)
+    value: $(body.commits[0].id)
   - name: gitrepositoryurl
     value: $(body.repository.clone_url)
   - name: docker-tag
-    value: $(body.repository.name):$(body.head_commit.id)
+    value: $(body.repository.name):$(body.commits[0].id)
   - name: event-type
-    value: $(header.X-Github-Event)
-  - name: webhooks-tekton-git-branch
-    value: $(body.webhooks-tekton-git-branch)
+    value: $(header.X-Gogs-Event)
