@@ -1,4 +1,4 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 # This requires the simple pipeline tasks from the pipeline hotel to be installed first
 # and the simple pipeline, and the conditional resource
@@ -24,15 +24,9 @@ spec:
       params:
         - name: pathToYamlFile
           value: "k8s"
-        - name: deploy-sandbox
-          default: "{DEPLOY-SANDBOX}"
         - name: deploy-dev
           default: "true"
-        - name: deploy-test
-          default: "{DEPLOY-TEST}"
         - name: deploy-qa
           default: "false"
-        - name: prod
-          default: "{PROD}"
       serviceAccountName: pipeline
       timeout: "1h0m0s"

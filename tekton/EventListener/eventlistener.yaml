@@ -1,15 +1,23 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
   name: webapp-listener
 spec:
   serviceAccountName: pipeline
   triggers:
-  - binding:
-      name: webapp-pullrequest-binding
-    template:
-      name: webapp-triggertemplate
-  - binding:
-      name: webapp-push-binding
+  - name: webapp-listener
+    interceptors: 
+      - github:
+          secretRef:
+            secretName: gogs-secret
+            secretKey: secretToken
+          eventTypes:
+            - pull_request
+            - push
+    bindings:
+     - name: webapp-pullrequest-binding
+       ref: webapp-pullrequest-binding
+     - name: webapp-push-binding
+       ref: webapp-push-binding
     template:
       name: webapp-triggertemplate
