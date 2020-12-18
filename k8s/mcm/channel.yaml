@@ -2,9 +2,9 @@ apiVersion: app.ibm.com/v1alpha1
 kind: Channel
 metadata:
   name: webapp-channel
-  namespace: {DEVOPSNS}
+  namespace: devops
 spec:
-  pathname: {DEVOPSNS}
+  pathname: devops
   sourceNamespaces:
-    - {DEVOPSNS}
+    - devops
   type: Namespace

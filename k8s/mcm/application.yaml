@@ -2,7 +2,7 @@ apiVersion: app.k8s.io/v1beta1
 kind: Application
 metadata:
   name: webapp-app
-  namespace:  {DEVOPSNS}
+  namespace:  devops
 spec:
   componentKinds:
     - group: app.ibm.com

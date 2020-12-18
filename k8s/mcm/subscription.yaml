@@ -1,13 +1,16 @@
 apiVersion: apps.open-cluster-management.io/v1
 kind: Subscription
 metadata:
-  name: webapp-deployment-subscription
-  namespace: {DEVOPSNS}
+  name: webapp-subscription-qa
+  namespace: devops
   labels:
     appgroup: webapp
 spec:
-  channel: webapp-channel
-  name: webapp-deployment
+  channel: devops/webapp-channel
+  packageFilter:
+    labelSelector:
+      matchLabels:
+        appgroup: webapp
   placement:
     placementRef:
       kind: PlacementRule
@@ -16,44 +19,4 @@ spec:
    - clusterName: "/"
      clusterOverrides:
       - path: "metadata.namespace"
-        value: lightblue-qa
----
-apiVersion: apps.open-cluster-management.io/v1
-kind: Subscription
-metadata:
-  name: webapp-service-subscription
-  namespace: {DEVOPSNS}
-  labels:
-    appgroup: webapp
-spec:
-  channel: webapp-channel
-  name: webapp-service
-  placement:
-    placementRef:
-      kind: PlacementRule
-      name: webapp-placementrule
-  overrides:
-   - clusterName: "/"
-     clusterOverrides:
-      - path: "metadata.namespace"
-        value: lightblue-qa
----
-apiVersion: apps.open-cluster-management.io/v1
-kind: Subscription
-metadata:
-  name: webapp-route-subscription
-  namespace: {DEVOPSNS}
-  labels:
-    appgroup: webapp
-spec:
-  channel: webapp-channel
-  name: webapp-route
-  placement:
-    placementRef:
-      kind: PlacementRule
-      name: webapp-placementrule
-  overrides:
-   - clusterName: "/"
-     clusterOverrides:
-      - path: "metadata.namespace"
-        value: lightblue-qa
+        value: app-qa

@@ -2,11 +2,11 @@ apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
   name: webapp-placementrule
-  namespace: {DEVOPSNS}
+  namespace: devops
   labels:
     appgroup: webapp
 spec:
   clusterLabels:
     matchLabels:
-      name: cpeir-mcm
+      name: cpeir033
   clusterReplicas:  1
